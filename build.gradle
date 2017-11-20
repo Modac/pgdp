@@ -19,8 +19,18 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
-mainClassName = 'HelloWorld'
+mainClassName = 'Blatt4.HA_4p8_XorVerschluesselungImCBCModus'
 compileJava.options.encoding = 'UTF-8'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+            exclude '**/Abgaben/**'
+        }
+    }
+}
+
 
 repositories {
     mavenCentral()
