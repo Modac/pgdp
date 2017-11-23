@@ -1,6 +1,6 @@
 package Blatt4;
 
-import MiniJava.MiniJava;
+import Libraries.MiniJava;
 
 public class B4_Helferlein extends MiniJava {
 
@@ -38,7 +38,8 @@ public class B4_Helferlein extends MiniJava {
   public static void printHex(int until) {
     int max=Integer.toHexString(until).length()+2;
     System.out.print(" ");
-    for (int i = 0; i <= until; i++) {
+    int i;
+    for (i = 0; i <= until; i++) {
       System.out.print(Integer.toHexString(i));
       for (int j  = Integer.toHexString(i).length(); j<=max; j++){
         System.out.print(" ");

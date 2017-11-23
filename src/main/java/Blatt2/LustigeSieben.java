@@ -1,6 +1,6 @@
 package Blatt2;
 
-import MiniJava.MiniJava;
+import Libraries.MiniJava;
 
 public class LustigeSieben extends MiniJava {
 

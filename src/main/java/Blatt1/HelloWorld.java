@@ -1,6 +1,6 @@
 package Blatt1;
 
-import MiniJava.MiniJava;
+import Libraries.MiniJava;
 
 public class HelloWorld extends MiniJava {
 

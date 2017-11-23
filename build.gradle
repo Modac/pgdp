@@ -19,7 +19,7 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
-mainClassName = 'Blatt4.HA_4p8_XorVerschluesselungImCBCModus'
+mainClassName = 'Blatt5.HA_5p6_Mensch'
 compileJava.options.encoding = 'UTF-8'
 
 sourceSets {

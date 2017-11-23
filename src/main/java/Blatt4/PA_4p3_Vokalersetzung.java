@@ -1,6 +1,6 @@
 package Blatt4;
 
-import MiniJava.MiniJava;
+import Libraries.MiniJava;
 
 public class PA_4p3_Vokalersetzung extends MiniJava {
 

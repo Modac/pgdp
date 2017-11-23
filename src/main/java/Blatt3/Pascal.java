@@ -1,6 +1,6 @@
 package Blatt3;
 
-import MiniJava.MiniJava;
+import Libraries.MiniJava;
 
 public class Pascal extends MiniJava {
 

@@ -1,4 +1,4 @@
-package MiniJava;
+package Libraries;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

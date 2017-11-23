@@ -1,6 +1,6 @@
 package Blatt4;
 
-import MiniJava.MiniJava;
+import Libraries.MiniJava;
 
 public class HA_4p7_Binnenmajuskel extends MiniJava {
 

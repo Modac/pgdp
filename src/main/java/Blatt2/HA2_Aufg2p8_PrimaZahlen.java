@@ -1,6 +1,6 @@
 package Blatt2;
 
-import MiniJava.MiniJava;
+import Libraries.MiniJava;
 
 public class HA2_Aufg2p8_PrimaZahlen extends MiniJava {
 

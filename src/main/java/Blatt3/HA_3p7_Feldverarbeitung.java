@@ -1,6 +1,6 @@
 package Blatt3;
 
-import MiniJava.MiniJava;
+import Libraries.MiniJava;
 import javax.annotation.Generated;
 
 @Generated("Ignore Duplicate Code, because of the Files in Abgaben")
