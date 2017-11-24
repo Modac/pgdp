@@ -125,10 +125,8 @@ public class HA_5p6_Mensch extends Aerger {
     int stein = readInt("Spieler " + playerNames[i] + " hat eine " + dice
         + " gewürfelt. Wähle welcher Stein bewegt werden soll.");
     //write(playerArrs[i][stein-1]);
-    // Wenn die Steinnummer nicht zwischen 1 und 4 liegt oder der Stein schon im Garten steht
+    // Wenn die Steinnummer nicht zwischen 1 und 4 liegt oder der Stein schon im
     while (stein<1 || stein>4 || playerArrs[i][stein - 1] > 39) {
-
-      // Kurzschlussausswertung, damit keine IndexOutOfException entsteht
       if (((stein >= 1 && stein <= 4) && playerArrs[i][stein - 1] > 39)) {
         stein = readInt(
             "Du hast eine " + dice
@@ -138,6 +136,8 @@ public class HA_5p6_Mensch extends Aerger {
             "Du hast eine " + dice + " gewürfelt. Bitte wähle einen Stein zwischen 1 und 4.");
       }
     }
+
+    // Kurzschlussausswertung, damit keine IndexOutOfException entsteht
     return stein;
   }
 
