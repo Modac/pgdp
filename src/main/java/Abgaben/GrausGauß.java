@@ -1,10 +1,4 @@
-package Blatt5;
-
-import Libraries.MiniJava;
-import javax.annotation.Generated;
-
-@Generated("Ignore Duplicate Code, because of the Files in Abgaben")
-public class HA_5p7_GrausGauß extends MiniJava {
+public class GrausGauß extends MiniJava {
 
   private static int lines;
 

@@ -1,10 +1,4 @@
-package Blatt5;
-
-import Libraries.Aerger;
-import javax.annotation.Generated;
-
-@Generated("Ignore Duplicate Code, because of the Files in Abgaben")
-public class HA_5p6_Mensch extends Aerger {
+public class Mensch extends Aerger {
 
   private static int[] arrYellow = {-1, -1, -1, -1};
   private static int[] arrBlue = {-1, -1, -1, -1};

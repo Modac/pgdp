@@ -1,7 +1,9 @@
 package Blatt4;
 
 import Libraries.MiniJava;
+import javax.annotation.Generated;
 
+@Generated("Ignore Duplicate Code, because of the Files in Abgaben")
 public class HA_4p7_Binnenmajuskel extends MiniJava {
 
   public static void main(String[] args) {

@@ -19,7 +19,7 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
-mainClassName = 'Blatt5.HA_5p7_GrausGauß'
+mainClassName = 'Blatt6.HA_6p6_Ponynome'
 compileJava.options.encoding = 'UTF-8'
 
 sourceSets {
