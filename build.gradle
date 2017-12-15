@@ -19,7 +19,7 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
-mainClassName = 'Blatt7.HA_7p6_SlowAndEvenSlowerSort'
+mainClassName = 'Blatt7.HilfPingu'
 compileJava.options.encoding = 'UTF-8'
 
 sourceSets {

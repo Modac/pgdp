@@ -72,7 +72,7 @@ public class HA_6p5_PinguinMaze extends Maze {
     return penguins;
   }
 
-  // Wenn ungültiger Index, dann false
+  // Wenn ungültiger Index, dann true
   public static boolean isNotInRange(int x, int y) {
     return x < 0 || x > lab.length - 1 ||
         y < 0 || y > lab[x].length - 1;
