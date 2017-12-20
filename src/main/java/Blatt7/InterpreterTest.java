@@ -37,8 +37,9 @@ public class InterpreterTest {
             "JNE loop\n" +
             "LDS -1\n" +
             "RETURN 3\n";
-//    int[] program = Interpreter.parse(textProgram);
-//    int retVal = Interpreter.execute(program);
+    int[] program = Interpreter.parse(textProgram);
+    int retVal = Interpreter.execute(program);
+    System.out.println(retVal);
 //    assertEquals(252, retVal);
   }
 
@@ -68,9 +69,16 @@ public class InterpreterTest {
             "end:\n" +
             "LDS 1\n" +
             "RETURN 2";
-//    int[] program = Interpreter.parse(textProgram);
-//    int retVal = Interpreter.execute(program);
+    int[] program = Interpreter.parse(textProgram);
+    int retVal = Interpreter.execute(program);
+    System.out.println(retVal);
 //    assertEquals(720, retVal);
+  }
+
+  public static void main(String[] args) {
+    InterpreterTest it = new InterpreterTest();
+    it.testGGT();
+    it.testFak();
   }
 
 }
