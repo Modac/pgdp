@@ -36,7 +36,7 @@ public class MiniJavaParser {
 
       if (isAlphaNumeric(cT)) {
         token.append(cT);
-      } else if (cT == ' ' && token.length() > 0) {
+      } else if ((cT == ' ' || cT == '\n') && token.length() > 0) {
         res.add(token.toString());
         token.setLength(0);
       } else if (cT != ' ' && cT != '\n') {
@@ -193,39 +193,54 @@ public class MiniJavaParser {
 
   public static int parseExpression(String[] program, int from) {
     int fromO = from;
+    int fromF = from;
+    boolean isExpr = false;
 
-    if ((from = parseNumber(program, from)) > 0) {
-      return from;
+    if (((from = parseNumber(program, from)) > 0)) {
+      isExpr = true;
+      fromF = from;
     }
-
     from = fromO;
 
-    if ((from = parseName(program, from)) > 0) {
-      return from;
+    if (!isExpr && (from = parseName(program, from)) > 0) {
+      isExpr = true;
+      fromF = from;
     }
-
     from = fromO;
 
-    if ((from = checkToken(program, from, "(")) > 0 &&
+    if (!isExpr &&
+        (from = checkToken(program, from, "(")) > 0 &&
         (from = parseExpression(program, from)) > 0 &&
         (from = checkToken(program, from, ")")) > 0) {
-      return from;
+      isExpr = true;
+      fromF = from;
     }
 
     from = fromO;
 
-    if ((from = parseUnop(program, from)) > 0 &&
+    if (!isExpr &&
+        (from = parseUnop(program, from)) > 0 &&
         (from = parseExpression(program, from)) > 0) {
-      return from;
+      isExpr = true;
+      fromF = from;
     }
 
-    from = fromO;
-
-    if ((from = parseExpression(program, from)) > 0 &&
-        (from = parseBinop(program, from)) > 0 &&
-        (from = parseExpression(program, from)) > 0) {
-      return from;
+    if ( isExpr ) {
+      if ((from = parseBinop(program, fromF)) > 0 &&
+          ((from = parseExpression(program, from)) > 0)){
+        return from;
+      } else {
+        return fromF;
+      }
     }
+
+
+
+    //    (from = parseExpression(program, from)) > 0 &&
+    //    (from = parseBinop(program, from)) > 0 &&
+    //    (from = parseExpression(program, from)) > 0) {
+    //  return from;
+    //}
 
     return -1;
   }
@@ -250,49 +265,68 @@ public class MiniJavaParser {
 
   public static int parseCondition(String[] program, int from) {
     int fromO = from;
+    int fromF = from;
+    boolean isCond = false;
 
     if ((from = checkToken(program, from, "true")) > 0) {
-      return from;
+      isCond = true;
+      fromF = from;
     }
 
     from = fromO;
 
-    if ((from = checkToken(program, from, "false")) > 0) {
-      return from;
+    if (!isCond &&
+        (from = checkToken(program, from, "false")) > 0) {
+      isCond = true;
+      fromF = from;
     }
 
     from = fromO;
 
-    if ((from = checkToken(program, from, "(")) > 0 &&
-        (from = parseCondition(program, from)) > 0 &&
-        (from = checkToken(program, from, ")")) > 0) {
-      return from;
-    }
-
-    from = fromO;
-
-    if ((from = parseExpression(program, from)) > 0 &&
-        (from = parseComp(program, from)) > 0 &&
-        (from = parseExpression(program, from)) > 0) {
-      return from;
-    }
-
-    from = fromO;
-
-    if ((from = parseBunop(program, from)) > 0 &&
+    if (!isCond &&
         (from = checkToken(program, from, "(")) > 0 &&
         (from = parseCondition(program, from)) > 0 &&
         (from = checkToken(program, from, ")")) > 0) {
-      return from;
+      isCond = true;
+      fromF = from;
     }
 
     from = fromO;
 
+    if (!isCond &&
+        (from = parseExpression(program, from)) > 0 &&
+        (from = parseComp(program, from)) > 0 &&
+        (from = parseExpression(program, from)) > 0) {
+      isCond = true;
+      fromF = from;
+    }
+
+    from = fromO;
+
+    if (!isCond &&
+        (from = parseBunop(program, from)) > 0 &&
+        (from = checkToken(program, from, "(")) > 0 &&
+        (from = parseCondition(program, from)) > 0 &&
+        (from = checkToken(program, from, ")")) > 0) {
+      isCond = true;
+      fromF = from;
+    }
+
+    if(isCond){
+      if ((from = parseBbinop(program, fromF)) > 0 &&
+          (from = parseCondition(program, from)) > 0) {
+        return from;
+      } else {
+        return fromF;
+      }
+    }
+    /*
     if ((from = parseCondition(program, from)) > 0 &&
         (from = parseBinop(program, from)) > 0 &&
         (from = parseCondition(program, from)) > 0) {
       return from;
     }
+    */
     return -1;
   }
 
@@ -407,37 +441,4 @@ public class MiniJavaParser {
     return n;
   }
 
-  public static void main(String[] args) {
-    String tP = "int sum, n, i;\n"
-        + "n = read();\n"
-        + "while (n == 0) {\n"
-        + "n = read();\n"
-        + "}";
-
-    String tP1 = "int sum, n, i;\n"
-        + "n = read();\n"
-        + "while (n < 0) {\n"
-        + "n = read();\n"
-        + "}\n"
-        + "sum = 0;\n"
-        + "i = 0;\n"
-        + "while (i < n) {\n"
-        + "{\n"
-        + "if (i % 3 == 0 || i % 7 == 0) {\n"
-        + "sum = sum + i;\n"
-        + "if (i % 3 == 0 || i % 7 == 0) {\n"
-        + "sum = sum + i;\n"
-        + "} else\n"
-        + "sum = 99;\n"
-        + "}\n"
-        + "i = i + 1;\n"
-        + "}\n"
-        + "}\n"
-        + "write(sum);";
-
-    // [int, sum, ,, n, ,, i, ;, n, =, read, (, ), ;, while, (, n, <, 0, ), {, n, =, read, (, ), ;, }]
-
-    System.out.println(parseProgram(lex(tP1)));
-
-  }
 }
