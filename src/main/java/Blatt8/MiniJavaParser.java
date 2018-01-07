@@ -95,17 +95,17 @@ public class MiniJavaParser {
       return -1;
     }
 
-    if(!isNumber(program[from].charAt(0))) {
+    if (!isNumber(program[from].charAt(0))) {
       return -1;
     }
 
     for (int i = 1; i < program[from].length(); i++) {
-      if(!isNumber(program[from].charAt(i))) {
+      if (!isNumber(program[from].charAt(i))) {
         return -1;
       }
     }
 
-    return from+1;
+    return from + 1;
 
   }
 
@@ -114,17 +114,17 @@ public class MiniJavaParser {
       return -1;
     }
 
-    if(!isLetter(program[from].charAt(0))) {
+    if (!isLetter(program[from].charAt(0))) {
       return -1;
     }
 
     for (int i = 1; i < program[from].length(); i++) {
-      if(!isAlphaNumeric(program[from].charAt(i))) {
+      if (!isAlphaNumeric(program[from].charAt(i))) {
         return -1;
       }
     }
 
-    return from+1;
+    return from + 1;
   }
 
   public static int parseType(String[] program, int from) {
@@ -225,16 +225,14 @@ public class MiniJavaParser {
       fromF = from;
     }
 
-    if ( isExpr ) {
+    if (isExpr) {
       if ((from = parseBinop(program, fromF)) > 0 &&
-          ((from = parseExpression(program, from)) > 0)){
+          ((from = parseExpression(program, from)) > 0)) {
         return from;
       } else {
         return fromF;
       }
     }
-
-
 
     //    (from = parseExpression(program, from)) > 0 &&
     //    (from = parseBinop(program, from)) > 0 &&
@@ -312,7 +310,7 @@ public class MiniJavaParser {
       fromF = from;
     }
 
-    if(isCond){
+    if (isCond) {
       if ((from = parseBbinop(program, fromF)) > 0 &&
           (from = parseCondition(program, from)) > 0) {
         return from;
@@ -343,7 +341,7 @@ public class MiniJavaParser {
 
       do {
         if (((checkToken(program, from, "}")) > 0)) {
-          return from+1;
+          return from + 1;
         }
       } while ((from = parseStatement(program, from)) > 0);
 
@@ -359,7 +357,7 @@ public class MiniJavaParser {
         int fromO1 = from;
 
         if ((from = parseExpression(program, from)) > 0) {
-          if((from = checkToken(program, from, ";"))>0){
+          if ((from = checkToken(program, from, ";")) > 0) {
             return from;
           }
         }

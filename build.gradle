@@ -19,7 +19,7 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
-mainClassName = 'Blatt8.MiniJavaParser'
+mainClassName = 'Blatt9.Aufg9p5.Weihnachtsbaum'
 compileJava.options.encoding = 'UTF-8'
 
 sourceSets {
