@@ -25,6 +25,7 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
   private static ArrayList<Weihnachtsobjekt> staemmeUndAeste = new ArrayList<>();
   private static ArrayList<Weihnachtsobjekt> foregroundObjects = new ArrayList<>();
 
+  // unterschiedliche Static Object Arrays für Hinter- und Vordergrund
   private static boolean[][] staticObjectsBack = new boolean[30][33];
   private static boolean[][] staticObjectsFront = new boolean[30][33];
 
@@ -33,17 +34,24 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
   public static Weihnachtsobjekt createRandomObjekt() {
     if (phase == 1) {
 
-      int[] rT = {(int) (2 * Math.random()), -1};
+      // Stamm oder Ast, 1:3 Chance
 
-      if (rT[0] == WeihnachtsElfen.FALLING_GREEN) {
+      int[] rT = {(int) (4 * Math.random()), -1};
+
+      if (rT[0] == WeihnachtsElfen.FALLING_TRUNK) {
+
+        // zufällige Breite
+        rT[1] = (int) (5 * Math.random());
+
+        // zufällige x Position, aber auf die breite aufpassen
+        return new Baumstamm((int) ((29 - (2 * rT[1] + 2)) * Math.random()) + 1, 1, rT[1]);
+      } else {
         rT[1] = (int) (8 * Math.random());
         return new Ast((int) ((29 - (2 * rT[1] + 2)) * Math.random()) + 1, 1, rT[1]);
-      } else {
-        rT[1] = (int) (5 * Math.random());
-        return new Baumstamm((int) ((29 - (2 * rT[1] + 2)) * Math.random()) + 1, 1, rT[1]);
       }
     }
 
+    // Weihnachtskugel, Schneeflocke oder Pinguin
     int rO = (int) (3 * Math.random());
     int rX = (int) (30 * Math.random());
     if (rO == 0) {
@@ -70,11 +78,12 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
         moveRight();
         moveDown();
       } else if (key == WeihnachtsElfen.KEY_UP) {
-        phase = phase%2+1;
+        phase = phase % 2 + 1;
       }
 
       int z = (int) (5 * Math.random());
 
+      // 1:4 Chance, dass etwas spawnt
       if (z == 0) {
         Weihnachtsobjekt wO = createRandomObjekt();
 
@@ -93,7 +102,6 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
 
       //objekte.forEach(System.out::println);
 
-
     }
   }
 
@@ -102,9 +110,9 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
     scanStaticObjectsFrontLR();
 
     objekte.forEach(weihnachtsobjekt -> {
-      if (weihnachtsobjekt instanceof Schneeflocke){
+      if (weihnachtsobjekt instanceof Schneeflocke) {
         // Schneeflocken fallen in gerader linie nach unten
-      } else if(weihnachtsobjekt instanceof Pinguin ||
+      } else if (weihnachtsobjekt instanceof Pinguin ||
           weihnachtsobjekt instanceof Weihnachtskugel) {
         weihnachtsobjekt.moveRight(staticObjectsFront);
 
@@ -126,9 +134,9 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
     scanStaticObjectsFrontLR();
 
     objekte.forEach(weihnachtsobjekt -> {
-      if (weihnachtsobjekt instanceof Schneeflocke){
+      if (weihnachtsobjekt instanceof Schneeflocke) {
         // Schneeflocken fallen in gerader linie nach unten
-      } else if(weihnachtsobjekt instanceof Pinguin ||
+      } else if (weihnachtsobjekt instanceof Pinguin ||
           weihnachtsobjekt instanceof Weihnachtskugel) {
         weihnachtsobjekt.moveLeft(staticObjectsFront);
 
@@ -152,7 +160,6 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
 
     SingleObject[][] frontObjects = new SingleObject[30][33];
 
-
     objekte.forEach(weihnachtsobjekt -> {
       if (weihnachtsobjekt instanceof SingleObject) {
         frontObjects[weihnachtsobjekt.x][weihnachtsobjekt.y] = (SingleObject) weihnachtsobjekt;
@@ -162,7 +169,7 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
     staticObjectsFront = new boolean[30][33];
 
     for (int x = 0; x < 30; x++) {
-      staticObjectsFront[x][staticObjectsFront[x].length-1] = true;
+      staticObjectsFront[x][staticObjectsFront[x].length - 1] = true;
     }
 
     for (int y = 33 - 1; y >= 0; y--) {
@@ -224,7 +231,7 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
     staticObjectsBack = new boolean[30][33];
 
     for (int x = 0; x < 30; x++) {
-      staticObjectsBack[x][staticObjectsBack[x].length-1] = true;
+      staticObjectsBack[x][staticObjectsBack[x].length - 1] = true;
     }
 
     for (int y = 33 - 1; y >= 0; y--) {
@@ -262,12 +269,12 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
 
     MultiObject[][] backObjects = new MultiObject[30][33];
 
-
     objekte.forEach(weihnachtsobjekt -> {
       if (weihnachtsobjekt instanceof SingleObject) {
         frontObjects[weihnachtsobjekt.x][weihnachtsobjekt.y] = (SingleObject) weihnachtsobjekt;
       } else if (weihnachtsobjekt instanceof MultiObject) {
-        for (int i = weihnachtsobjekt.x; i < 2 * ((MultiObject) weihnachtsobjekt).breite + 2 + weihnachtsobjekt.x; i++) {
+        for (int i = weihnachtsobjekt.x;
+            i < 2 * ((MultiObject) weihnachtsobjekt).breite + 2 + weihnachtsobjekt.x; i++) {
           backObjects[i][weihnachtsobjekt.y] = (MultiObject) weihnachtsobjekt;
         }
 
@@ -277,7 +284,7 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
     staticObjectsFront = new boolean[30][33];
 
     for (int x = 0; x < 30; x++) {
-      staticObjectsFront[x][staticObjectsFront[x].length-1] = true;
+      staticObjectsFront[x][staticObjectsFront[x].length - 1] = true;
     }
 
     for (int y = 33 - 1; y >= 0; y--) {
@@ -292,7 +299,7 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
         } else {
 
           if (backObjects[x][y] instanceof Ast && !(backObjects[x][y + 1] instanceof Ast)) {
-            staticObjectsFront[x][y+1] = true;
+            staticObjectsFront[x][y + 1] = true;
           }
 
           if (staticObjectsFront[x][y + 1] && sO != null) {
@@ -305,7 +312,7 @@ public class Weihnachtsbaum extends BitteNichtAbgeben {
       }
     }
 
-    printStaticObjectsArray(staticObjectsFront);
+    //printStaticObjectsArray(staticObjectsFront);
 
   }
 

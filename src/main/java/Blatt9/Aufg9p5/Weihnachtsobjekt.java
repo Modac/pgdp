@@ -44,6 +44,10 @@ public abstract class Weihnachtsobjekt {
     this.y = y;
   }
 
+  // Da von der Klasse Weihnachtsobjekt keine Objekte direkt erstellt werden sollen
+  // wird sie abstract gemacht
+  // und da die Funktionen recht spezielle Verhalten implementieren sollen das
+  // lieber die Unterklassen machen
   public abstract void addObjektToSpielfeld(int[][] spielfeld);
   public abstract boolean moveDown(boolean[][] staticObjects);
   public abstract int moveLeft(boolean[][] staticObjects);

@@ -28,6 +28,7 @@ public class SingleObject extends Weihnachtsobjekt {
     if (this.spielfeld != null) {
       return;
     }
+    // Wenn Hinter- oder Vordergrund negativ, dann nicht überschreiben
     spielfeld[x][y] =
         (background < 0 ? spielfeld[x][y] & (0xFF << 8) : background) + (foreground < 0 ?
             spielfeld[x][y] & 0xFF : foreground);
@@ -38,6 +39,7 @@ public class SingleObject extends Weihnachtsobjekt {
     if (this.spielfeld == null) {
       return;
     }
+    // Wenn Hinter- oder Vordergrund negativ, dann nicht überschreiben
     this.spielfeld[x][y] =
         (background < 0 ? spielfeld[x][y] & (0xFF << 8) : WeihnachtsElfen.BACKGROUND_EMPTY) +
             (foreground < 0 ? spielfeld[x][y] & 0xFF : WeihnachtsElfen.FOREGROUND_EMPTY);
@@ -94,7 +96,7 @@ public class SingleObject extends Weihnachtsobjekt {
   }
 
   public boolean isAstHereAndNoAstBeneath() {
-    return isAst(x, y) && !isAst(x, y+1);
+    return isAst(x, y) && !isAst(x, y + 1);
   }
 
   public boolean isAst(int x, int y) {

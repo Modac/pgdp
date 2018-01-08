@@ -1,13 +1,14 @@
-package Blatt9;
+package Blatt9.Aufg9p6;
 
 import Libraries.MiniJava;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import javax.annotation.Generated;
 
 
-@Generated("Ignore Duplicate Code, because of the Files in Abgaben")
+@Generated("Ignore Duplicate Code")
 public class Interpreter extends MiniJava {
 
   public static final int NOP = 0;
@@ -19,15 +20,23 @@ public class Interpreter extends MiniJava {
   public static final int LDS = 6;
   public static final int STS = 7;
   public static final int JUMP = 8;
-  public static final int JE = 9;
-  public static final int JNE = 10;
-  public static final int JLT = 11;
+  //public static final int JE = 9;
+  //public static final int JNE = 10;
+  //public static final int JLT = 11;
   public static final int IN = 12;
   public static final int OUT = 13;
   public static final int CALL = 14;
   public static final int RETURN = 15;
   public static final int HALT = 16;
   public static final int ALLOC = 17;
+  public static final int DIV = 18;
+  public static final int AND = 19;
+  public static final int OR = 20;
+  public static final int NOT = 21;
+  public static final int EQ = 22;
+  public static final int LT = 23;
+  public static final int LE = 24;
+
 
   public static void main(String[] args) {
     System.out.println("Rückgabe: " + execute(parse(readProgramConsole())));
@@ -60,7 +69,7 @@ public class Interpreter extends MiniJava {
 
   private static Map<String, Integer> labelMap = new HashMap<>();
 
-  private static int[] stack = new int[128];
+  private static int[] stack = new int[1024];
   private static int sp = -1;
   private static int fp = sp;
 
@@ -98,8 +107,9 @@ public class Interpreter extends MiniJava {
           sts(imm);
           break;
         case JUMP:
-          i = jump(imm) - 1;
+          i = jump(imm, i + 1) - 1;
           break;
+        /*
         case JE:
           // i+1 wirkt dem - 1 entgegen und das - 1 wirkt dem i++ von der for Schleife entgegen
           i = je(imm, i+1) - 1;
@@ -110,6 +120,7 @@ public class Interpreter extends MiniJava {
         case JLT:
           i = jlt(imm, i+1) - 1;
           break;
+        */
         case IN:
           in();
           break;
@@ -117,7 +128,7 @@ public class Interpreter extends MiniJava {
           out();
           break;
         case CALL:
-          i = call(imm, i+1) - 1;
+          i = call(imm, i + 1) - 1;
           break;
         case RETURN:
           i = returnIns(imm) - 1;
@@ -127,6 +138,27 @@ public class Interpreter extends MiniJava {
           return pop();
         case ALLOC:
           alloc(imm, prevOpCode);
+          break;
+        case DIV:
+          div();
+          break;
+        case AND:
+          and();
+          break;
+        case OR:
+          or();
+          break;
+        case NOT:
+          not();
+          break;
+        case EQ:
+          eq();
+          break;
+        case LT:
+          lt();
+          break;
+        case LE:
+          le();
           break;
         default:
           // Do nothing
@@ -140,6 +172,34 @@ public class Interpreter extends MiniJava {
     }
     error("Das Programm wurde nicht durch HALT beendet");
     return -1;
+  }
+
+  private static void le() {
+    push((pop() <= pop()) ? -1 : 0);
+  }
+
+  private static void lt() {
+    push((pop() < pop()) ? -1 : 0);
+  }
+
+  private static void eq() {
+    push((pop() == pop()) ? -1 : 0);
+  }
+
+  private static void not() {
+    push(~pop());
+  }
+
+  private static void or() {
+    push(pop() | pop());
+  }
+
+  private static void and() {
+    push(pop() & pop());
+  }
+
+  private static void div() {
+    push(pop() / pop());
   }
 
   private static void alloc(int imm, int prevOpCode) {
@@ -213,8 +273,8 @@ public class Interpreter extends MiniJava {
     return (pop() == pop()) ? imm : i;
   }
 
-  private static int jump(int imm) {
-    return imm;
+  private static int jump(int imm, int i) {
+    return (pop() == -1) ? imm : i;
   }
 
   private static void sts(int imm) {
@@ -266,7 +326,8 @@ public class Interpreter extends MiniJava {
   public static void push(int value) {
     sp++;
     if (sp >= stack.length) {
-      error("Stack voll");
+      //error("Stack voll");
+      stack = Arrays.copyOf(stack, stack.length*2);
     }
     stack[sp] = value;
   }
@@ -275,11 +336,16 @@ public class Interpreter extends MiniJava {
     if (sp < 0) {
       error("Stack leer");
     }
-    return stack[sp--];
+    int pop = stack[sp];
+    stack[sp--] = -100;
+    return pop;
+    //return stack[sp--];
   }
 
 
   public static int[] parse(String textProgram) {
+
+    labelMap = new HashMap<>();
 
     String lines[] = textProgram.split("\\R+");
     String proLines[] = new String[lines.length];
@@ -302,6 +368,8 @@ public class Interpreter extends MiniJava {
         String label = new StringBuilder(lines[i]).deleteCharAt(lines[i].length() - 1).toString();
 
         if (hasLetter && !hasSpecial) {
+          System.out.println("Label " + label + " bearbeitet (" + proLinesN + ")");
+          System.out.println(labelMap.toString());
           if (labelMap.containsKey(label)) {
             error("Label " + label + " kommt mehrfach vor");
           } else {
@@ -341,18 +409,20 @@ public class Interpreter extends MiniJava {
     String immediate = getImmediate(command);
 
     // Wenn NOP ADD SUB MUL MOD IN OUT oder HALT und es ein Immediate gibt
-    if ((opcode <= MOD || opcode == IN || opcode == HALT || opcode == OUT)
-        && !immediate.equals("")) {
+    //if ((opcode <= MOD || opcode == IN || opcode == HALT || opcode == OUT)
+    //    && !immediate.equals("")) {
+    if (!hasImmediate(opcode) && !immediate.equals("")) {
       error("Befehl " + command + " darf kein Immediate haben");
-    // Wenn es ein Befehl ist, der ein Immediate braucht, aber keins da ist
-    } else if (!(opcode <= MOD || opcode == IN || opcode == HALT || opcode == OUT)
-        && immediate.equals("")) {
+      // Wenn es ein Befehl ist, der ein Immediate braucht, aber keins da ist
+      //} else if (!(opcode <= MOD || opcode == IN || opcode == HALT || opcode == OUT)
+      //    && immediate.equals("")) {
+    } else if (hasImmediate(opcode) && immediate.equals("")) {
       error("Befehl " + command + " muss ein Immediate haben");
     }
     int immediateInt = 0;
     if (!immediate.equals("")) {
       // Ersetze labels durch die zugehörigen Indizes
-      if (((opcode >= JUMP && opcode <= JLT) || opcode == LDI) && labelMap.containsKey(immediate)) {
+      if ((opcode == JUMP || opcode == LDI || opcode == CALL) && labelMap.containsKey(immediate)) {
         immediate = "" + labelMap.get(immediate);
       }
 
@@ -382,6 +452,16 @@ public class Interpreter extends MiniJava {
     return commandA[1];
   }
 
+  private static boolean hasImmediate(int opcode) {
+    return opcode == LDI ||
+        opcode == LDS ||
+        opcode == STS ||
+        opcode == JUMP ||
+        opcode == CALL ||
+        opcode == RETURN ||
+        opcode == ALLOC;
+  }
+
   private static int getOpCode(String mnemonic) {
     mnemonic = mnemonic.toUpperCase();
     switch (mnemonic) {
@@ -403,12 +483,14 @@ public class Interpreter extends MiniJava {
         return STS;
       case "JUMP":
         return JUMP;
+      /*
       case "JE":
         return JE;
       case "JNE":
         return JNE;
       case "JLT":
         return JLT;
+      */
       case "IN":
         return IN;
       case "OUT":
@@ -421,10 +503,96 @@ public class Interpreter extends MiniJava {
         return HALT;
       case "ALLOC":
         return ALLOC;
+      case "DIV":
+        return DIV;
+      case "AND":
+        return AND;
+      case "OR":
+        return OR;
+      case "NOT":
+        return NOT;
+      case "EQ":
+        return EQ;
+      case "LT":
+        return LT;
+      case "LE":
+        return LE;
       default:
         return -1;
     }
   }
 
+  public static String programToString(int[] program) {
+    String res = "";
+
+    for (int i = 0; i < program.length; i++) {
+      int opcode = program[i] >> 16;
+      int imm = (short) (program[i] & 0xFFFF);
+
+      res += i + ": " + getMnemonic(opcode) + (hasImmediate(opcode) ? "" + imm : "") + "\n";
+    }
+
+    return res;
+  }
+
+
+  private static String getMnemonic(int opcode) {
+    switch (opcode) {
+      case NOP:
+        return "NOP";
+      case ADD:
+        return "ADD";
+      case SUB:
+        return "SUB";
+      case MUL:
+        return "MUL";
+      case MOD:
+        return "MOD";
+      case LDI:
+        return "LDI";
+      case LDS:
+        return "LDS";
+      case STS:
+        return "STS";
+      case JUMP:
+        return "JUMP";
+      /*
+      case JE:
+        return "JE";
+      case JNE:
+        return "JNE";
+      case JLT:
+        return "JLT";
+      */
+      case IN:
+        return "IN";
+      case OUT:
+        return "OUT";
+      case CALL:
+        return "CALL";
+      case RETURN:
+        return "RETURN";
+      case HALT:
+        return "HALT";
+      case ALLOC:
+        return "ALLOC";
+      case DIV:
+        return "DIV";
+      case AND:
+        return "AND";
+      case OR:
+        return "OR";
+      case NOT:
+        return "NOT";
+      case EQ:
+        return "EQ";
+      case LT:
+        return "LT";
+      case LE:
+        return "LE";
+      default:
+        return "UNDEF";
+    }
+  }
 
 }
